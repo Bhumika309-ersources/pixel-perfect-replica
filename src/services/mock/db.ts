@@ -37,10 +37,6 @@ export interface MockDb {
   session: { userName: string };
 }
 
-const ACTOR_BY_ROLE: Record<SystemConfig["company"]["currency"], string> = {
-  USD: "Marcus Boyd",
-};
-
 function buildDb(): MockDb {
   return {
     suppliers: structuredClone(seed.suppliers),
@@ -218,5 +214,4 @@ export function pushNotification(
   });
 }
 
-export { ACTOR_BY_ROLE };
 export type { PurchaseOrder, GoodsReceipt, StockAdjustment };
