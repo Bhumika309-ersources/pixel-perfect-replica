@@ -250,38 +250,32 @@ export const purchaseOrders: PurchaseOrder[] = poSpecs.map((spec, i) => {
   };
 });
 
-export const goodsReceipts: GoodsReceipt[] = purchaseOrders
-  .filter((po) => po.receivedQtySum() > 0)
-  .map((po, i) => ({
-    id: `grn-${i + 1}`,
-    number: nextGrnNumber(),
-    poId: po.id,
-    supplierId: po.supplierId,
-    warehouseId: warehouses[i % 2].id,
-    receivedDate: dayOffset(-po.orderDaysAgo + 12, 13),
-    receivedBy: i % 2 === 0 ? "Rosa Jimenez" : "Curtis Lang",
-    status: "posted" as const,
-    lines: po.lines
-      .filter((l) => l.receivedQty > 0)
-      .map((l) => ({
-        poLineId: l.id,
-        itemId: l.itemId,
-        quantityOrdered: l.quantity,
-        quantityReceived: l.receivedQty,
-        quantityRejected: i === 3 && l.itemId === "itm-17" ? 2 : 0,
-        batchRef: `B${(grnSeq - 10 + i) % 9}7${i}A`,
-      })),
-    notes: "",
-  }));
-
-// Attach helper used above via prototype-free path: compute after array build
-declare module "@/types" {
-  interface PurchaseOrder {
-    receivedQtySum(): number;
-  }
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(purchaseOrders as any).forEach(() => undefined);
+export const goodsReceipts: GoodsReceipt[] = (() => {
+  let grnSeqLocal = 0;
+  return purchaseOrders
+    .filter((po) => po.lines.some((l) => l.receivedQty > 0))
+    .map((po, i) => ({
+      id: `grn-${i + 1}`,
+      number: nextGrnNumber(),
+      poId: po.id,
+      supplierId: po.supplierId,
+      warehouseId: warehouses[i % 2].id,
+      receivedDate: dayOffset(-7 - (i % 5) * 6, 13),
+      receivedBy: i % 2 === 0 ? "Rosa Jimenez" : "Curtis Lang",
+      status: "posted" as const,
+      lines: po.lines
+        .filter((l) => l.receivedQty > 0)
+        .map((l) => ({
+          poLineId: l.id,
+          itemId: l.itemId,
+          quantityOrdered: l.quantity,
+          quantityReceived: l.receivedQty,
+          quantityRejected: i === 3 && l.itemId === "itm-17" ? 2 : 0,
+          batchRef: `B${grnSeqLocal + 7}A${i}`,
+        })),
+      notes: "",
+    }));
+})();
 
 export const stockAdjustments: StockAdjustment[] = [
   { id: "adj-1", number: nextAdjNumber(), itemId: "itm-9", warehouseId: "wh-1", delta: -12, reason: "damage", occurredAt: dayOffset(-14, 15), by: "Rosa Jimenez", notes: "Pallet damaged by forklift in aisle 7.", resultingQty: 408 },
