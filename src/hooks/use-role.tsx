@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Role } from "@/types";
 import { ROLE_LABELS, roleCan } from "@/lib/permissions";
@@ -58,8 +57,7 @@ export function useRole(): RoleContextValue {
 /** Convenience hook for role-gated UI in pages. */
 export function useCan() {
   const { role } = useRole();
-  const queryClient = useQueryClient();
-  return useCallback((action: Parameters<typeof roleCan>[1]) => roleCan(role, action), [role, queryClient]);
+  return useCallback((action: Parameters<typeof roleCan>[1]) => roleCan(role, action), [role]);
 }
 
 export { ROLE_LABELS };
