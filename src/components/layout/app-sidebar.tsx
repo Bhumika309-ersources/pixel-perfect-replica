@@ -3,13 +3,13 @@ import {
   Activity,
   BarChart3,
   Boxes,
+  Building2,
   ClipboardCheck,
   FileText,
   LayoutDashboard,
   PackageSearch,
   Settings,
   ShoppingCart,
-  Suppliers,
   Truck,
   Warehouse,
 } from "lucide-react";
@@ -46,7 +46,7 @@ const NAV = [
     items: [
       { title: "Purchase Orders", url: "/purchase-orders", icon: ShoppingCart },
       { title: "Approvals", url: "/purchase-orders/approvals", icon: ClipboardCheck, badge: "approvals" },
-      { title: "Suppliers", url: "/suppliers", icon: Suppliers },
+      { title: "Suppliers", url: "/suppliers", icon: Building2 },
     ],
   },
   {
