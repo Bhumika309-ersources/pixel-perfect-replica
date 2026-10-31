@@ -13,6 +13,7 @@ import { Route as SplatRouteImport } from './routes/$'
 import { Route as ErpRouteImport } from './routes/_erp'
 import { Route as ErpIndexRouteImport } from './routes/_erp.index'
 import { Route as ErpDashboardRouteImport } from './routes/_erp.dashboard'
+import { Route as ErpDashboardIndexRouteImport } from './routes/_erp.dashboard.index'
 
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
@@ -33,30 +34,43 @@ const ErpDashboardRoute = ErpDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => ErpRoute,
 } as any)
+const ErpDashboardIndexRoute = ErpDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ErpDashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/': typeof ErpIndexRoute
-  '/dashboard': typeof ErpDashboardRoute
+  '/dashboard': typeof ErpDashboardRouteWithChildren
+  '/dashboard/': typeof ErpDashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/$': typeof SplatRoute
-  '/dashboard': typeof ErpDashboardRoute
   '/': typeof ErpIndexRoute
+  '/dashboard': typeof ErpDashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/$': typeof SplatRoute
   '/_erp': typeof ErpRouteWithChildren
-  '/_erp/dashboard': typeof ErpDashboardRoute
+  '/_erp/dashboard': typeof ErpDashboardRouteWithChildren
   '/_erp/': typeof ErpIndexRoute
+  '/_erp/dashboard/': typeof ErpDashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/$' | '/' | '/dashboard'
+  fullPaths: '/$' | '/' | '/dashboard' | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/$' | '/dashboard' | '/'
-  id: '__root__' | '/$' | '/_erp' | '/_erp/dashboard' | '/_erp/'
+  to: '/$' | '/' | '/dashboard'
+  id:
+    | '__root__'
+    | '/$'
+    | '/_erp'
+    | '/_erp/dashboard'
+    | '/_erp/'
+    | '/_erp/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,16 +108,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ErpDashboardRouteImport
       parentRoute: typeof ErpRoute
     }
+    '/_erp/dashboard/': {
+      id: '/_erp/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof ErpDashboardIndexRouteImport
+      parentRoute: typeof ErpDashboardRoute
+    }
   }
 }
 
+interface ErpDashboardRouteChildren {
+  ErpDashboardIndexRoute: typeof ErpDashboardIndexRoute
+}
+
+const ErpDashboardRouteChildren: ErpDashboardRouteChildren = {
+  ErpDashboardIndexRoute: ErpDashboardIndexRoute,
+}
+
+const ErpDashboardRouteWithChildren = ErpDashboardRoute._addFileChildren(
+  ErpDashboardRouteChildren,
+)
+
 interface ErpRouteChildren {
-  ErpDashboardRoute: typeof ErpDashboardRoute
+  ErpDashboardRoute: typeof ErpDashboardRouteWithChildren
   ErpIndexRoute: typeof ErpIndexRoute
 }
 
 const ErpRouteChildren: ErpRouteChildren = {
-  ErpDashboardRoute: ErpDashboardRoute,
+  ErpDashboardRoute: ErpDashboardRouteWithChildren,
   ErpIndexRoute: ErpIndexRoute,
 }
 

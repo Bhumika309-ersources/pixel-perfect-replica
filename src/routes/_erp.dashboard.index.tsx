@@ -21,10 +21,10 @@ import {
 } from "lucide-react";
 import { api } from "@/services/api";
 import { qk } from "@/services/query-keys";
-import { formatCurrency, formatRelative, formatRelativeDateTime as _fmt, titleize } from "@/lib/format";
+import { formatCurrency, formatRelative } from "@/lib/format";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
-import { StatusBadge } from "@/components/shared/status-badge";
+import { StatusBadge, StockTonePill } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -160,7 +160,7 @@ function DashboardPage() {
                     </div>
                     <div className="flex items-center gap-3 text-xs">
                       <span className="tabular text-muted-foreground">{totalQty} / {reorderPoint}</span>
-                      <StatusBadge status={totalQty <= 0 ? "rejected" : "submitted"} className={totalQty <= 0 ? "" : "normal-case"}>{totalQty <= 0 ? "Out of stock" : "Reorder"}</StatusBadge>
+                      <StockTonePill tone={totalQty <= 0 ? "out" : "low"} label={totalQty <= 0 ? "Out of stock" : "Reorder"} />
                     </div>
                   </Link>
                 ))}
