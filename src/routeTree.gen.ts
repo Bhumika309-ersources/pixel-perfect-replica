@@ -18,6 +18,7 @@ import { Route as ErpDashboardIndexRouteImport } from './routes/_erp.dashboard.i
 import { Route as ErpDashboardAnalyticsRouteImport } from './routes/_erp.dashboard.analytics'
 import { Route as ErpPurchaseOrdersIndexRouteImport } from './routes/_erp.purchase-orders.index'
 import { Route as ErpPurchaseOrdersNewRouteImport } from './routes/_erp.purchase-orders.new'
+import { Route as ErpPurchaseOrdersIdEditRouteImport } from './routes/_erp.purchase-orders.$id.edit'
 
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
@@ -63,6 +64,11 @@ const ErpPurchaseOrdersNewRoute = ErpPurchaseOrdersNewRouteImport.update({
   path: '/new',
   getParentRoute: () => ErpPurchaseOrdersRoute,
 } as any)
+const ErpPurchaseOrdersIdEditRoute = ErpPurchaseOrdersIdEditRouteImport.update({
+  id: '/$id/edit',
+  path: '/$id/edit',
+  getParentRoute: () => ErpPurchaseOrdersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/purchase-orders/new': typeof ErpPurchaseOrdersNewRoute
   '/dashboard/': typeof ErpDashboardIndexRoute
   '/purchase-orders/': typeof ErpPurchaseOrdersIndexRoute
+  '/purchase-orders/$id/edit': typeof ErpPurchaseOrdersIdEditRoute
 }
 export interface FileRoutesByTo {
   '/$': typeof SplatRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/purchase-orders/new': typeof ErpPurchaseOrdersNewRoute
   '/dashboard': typeof ErpDashboardIndexRoute
   '/purchase-orders': typeof ErpPurchaseOrdersIndexRoute
+  '/purchase-orders/$id/edit': typeof ErpPurchaseOrdersIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/_erp/purchase-orders/new': typeof ErpPurchaseOrdersNewRoute
   '/_erp/dashboard/': typeof ErpDashboardIndexRoute
   '/_erp/purchase-orders/': typeof ErpPurchaseOrdersIndexRoute
+  '/_erp/purchase-orders/$id/edit': typeof ErpPurchaseOrdersIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/purchase-orders/new'
     | '/dashboard/'
     | '/purchase-orders/'
+    | '/purchase-orders/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/$'
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
     | '/purchase-orders/new'
     | '/dashboard'
     | '/purchase-orders'
+    | '/purchase-orders/$id/edit'
   id:
     | '__root__'
     | '/$'
@@ -124,6 +135,7 @@ export interface FileRouteTypes {
     | '/_erp/purchase-orders/new'
     | '/_erp/dashboard/'
     | '/_erp/purchase-orders/'
+    | '/_erp/purchase-orders/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -196,6 +208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ErpPurchaseOrdersNewRouteImport
       parentRoute: typeof ErpPurchaseOrdersRoute
     }
+    '/_erp/purchase-orders/$id/edit': {
+      id: '/_erp/purchase-orders/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/purchase-orders/$id/edit'
+      preLoaderRoute: typeof ErpPurchaseOrdersIdEditRouteImport
+      parentRoute: typeof ErpPurchaseOrdersRoute
+    }
   }
 }
 
@@ -216,11 +235,13 @@ const ErpDashboardRouteWithChildren = ErpDashboardRoute._addFileChildren(
 interface ErpPurchaseOrdersRouteChildren {
   ErpPurchaseOrdersNewRoute: typeof ErpPurchaseOrdersNewRoute
   ErpPurchaseOrdersIndexRoute: typeof ErpPurchaseOrdersIndexRoute
+  ErpPurchaseOrdersIdEditRoute: typeof ErpPurchaseOrdersIdEditRoute
 }
 
 const ErpPurchaseOrdersRouteChildren: ErpPurchaseOrdersRouteChildren = {
   ErpPurchaseOrdersNewRoute: ErpPurchaseOrdersNewRoute,
   ErpPurchaseOrdersIndexRoute: ErpPurchaseOrdersIndexRoute,
+  ErpPurchaseOrdersIdEditRoute: ErpPurchaseOrdersIdEditRoute,
 }
 
 const ErpPurchaseOrdersRouteWithChildren =
