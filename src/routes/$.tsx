@@ -1,4 +1,4 @@
-import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, PackageSearch, SearchX } from "lucide-react";
 import { pageHead } from "@/lib/page-head";
 
