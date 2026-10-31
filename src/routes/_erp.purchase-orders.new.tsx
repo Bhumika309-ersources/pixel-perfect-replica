@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { api } from "@/services/api";
-import { createServerFn } from "@tanstack/react-start";
 import { PurchaseOrderForm } from "@/components/purchase-orders/po-form";
 
 export const Route = createFileRoute("/_erp/purchase-orders/new")({
@@ -18,11 +16,7 @@ export const Route = createFileRoute("/_erp/purchase-orders/new")({
   component: NewPurchaseOrderPage,
 });
 
-const createPoClient = createServerFn({ method: "POST" }).handler(async ({ data }) => data);
-// The form submits through the mock service directly (client-side demo backend).
 function NewPurchaseOrderPage() {
-  const submit = useServerFn(createPoClient);
-  void submit;
   return (
     <PurchaseOrderForm
       mode="create"
