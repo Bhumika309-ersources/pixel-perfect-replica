@@ -9,50 +9,109 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as SplatRouteImport } from './routes/$'
+import { Route as ErpRouteImport } from './routes/_erp'
+import { Route as ErpIndexRouteImport } from './routes/_erp.index'
+import { Route as ErpDashboardRouteImport } from './routes/_erp.dashboard'
 
-const IndexRoute = IndexRouteImport.update({
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ErpRoute = ErpRouteImport.update({
+  id: '/_erp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ErpIndexRoute = ErpIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => ErpRoute,
+} as any)
+const ErpDashboardRoute = ErpDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ErpRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/': typeof ErpIndexRoute
+  '/dashboard': typeof ErpDashboardRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/dashboard': typeof ErpDashboardRoute
+  '/': typeof ErpIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/_erp': typeof ErpRouteWithChildren
+  '/_erp/dashboard': typeof ErpDashboardRoute
+  '/_erp/': typeof ErpIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/$' | '/' | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/$' | '/dashboard' | '/'
+  id: '__root__' | '/$' | '/_erp' | '/_erp/dashboard' | '/_erp/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
+  ErpRoute: typeof ErpRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_erp': {
+      id: '/_erp'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ErpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_erp/': {
+      id: '/_erp/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof ErpIndexRouteImport
+      parentRoute: typeof ErpRoute
+    }
+    '/_erp/dashboard': {
+      id: '/_erp/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ErpDashboardRouteImport
+      parentRoute: typeof ErpRoute
     }
   }
 }
 
+interface ErpRouteChildren {
+  ErpDashboardRoute: typeof ErpDashboardRoute
+  ErpIndexRoute: typeof ErpIndexRoute
+}
+
+const ErpRouteChildren: ErpRouteChildren = {
+  ErpDashboardRoute: ErpDashboardRoute,
+  ErpIndexRoute: ErpIndexRoute,
+}
+
+const ErpRouteWithChildren = ErpRoute._addFileChildren(ErpRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  SplatRoute: SplatRoute,
+  ErpRoute: ErpRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
